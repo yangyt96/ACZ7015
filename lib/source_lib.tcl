@@ -1,10 +1,13 @@
 ##################################################################
 # Set IP repository paths
 ##################################################################
+
+set cur_dir [file dirname [info script]]
+
 set obj [get_filesets sources_1]
 set_property  ip_repo_paths  [list \
-    "$currentDir/lib/Digilent/ip/axi_dynclk" \
-    "$currentDir/lib/XiaoMeiGe" \
+    "$cur_dir/Digilent/ip/axi_dynclk" \
+    "$cur_dir/XiaoMeiGe" \
  ] $obj
 
 ##################################################################
