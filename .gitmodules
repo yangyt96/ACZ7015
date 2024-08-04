@@ -1,4 +1,0 @@
-[submodule "lib/Digilent"]
-	path = lib/Digilent
-	url = https://github.com/Digilent/vivado-library.git
-	branch = master
