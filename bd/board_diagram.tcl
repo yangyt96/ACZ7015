@@ -209,3 +209,8 @@ set_property USED_IN "synthesis implementation simulation" [get_files system.bd 
 set_property USED_IN_IMPLEMENTATION "1" [get_files system.bd ]
 set_property USED_IN_SIMULATION "1" [get_files system.bd ]
 set_property USED_IN_SYNTHESIS "1" [get_files system.bd ]
+
+# create wrapper
+make_wrapper -files [get_files system.bd] -top
+set wrapper_path "$project_dir/${project_name}.srcs/sources_1/bd/system/hdl/system_wrapper.v"
+add_files -norecurse $wrapper_path
