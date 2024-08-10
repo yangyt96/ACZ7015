@@ -4,8 +4,8 @@
 	(
 		// Users to add parameters here
         parameter WR_ADDRESS = 32'h1800000, //0x1800000 
-        parameter WR_LENGTH = 768000,       //Ð´ÈëÊý¾Ý³¤¶ÈÎª1000¸ö,1000*8×Ö½Ú=8000
-        parameter ENDIAN_MODE = 1,   //´óÐ¡¶ËÄ£Ê½£¬1Îª´ó¶ËÄ£Ê½£¨¸ß×Ö½Ú±£´æÔÚÄÚ´æµÄµÍµØÖ·£©£¬0ÎªÐ¡¶ËÄ£Ê½
+        parameter WR_LENGTH = 768000,       //Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½Îª1000ï¿½ï¿½,1000*8ï¿½Ö½ï¿½=8000
+        parameter ENDIAN_MODE = 1,   //ï¿½ï¿½Ð¡ï¿½ï¿½Ä£Ê½ï¿½ï¿½1Îªï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ÄµÍµï¿½Ö·ï¿½ï¿½ï¿½ï¿½0ÎªÐ¡ï¿½ï¿½Ä£Ê½
 		// User parameters ends
 		// Do not modify the parameters beyond this line
 
@@ -64,14 +64,14 @@
 		input        WR_FIFO_AEMPTY,
 		input [63:0] WR_FIFO_DATA,
       
-        input PCLK,            //ÏñËØÊ±ÖÓ
-        input Vsync,           //³¡Í¬²½ÐÅºÅ
-        input Href,            //ÐÐÍ¬²½ÐÅºÅ
-        input [7:0]Data,       //Êý¾Ý
+        input PCLK,            //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+        input Vsync,           //ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Åºï¿½
+        input Href,            //ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Åºï¿½
+        input [7:0]Data,       //ï¿½ï¿½ï¿½ï¿½
         
         output [7:0]DataPixel,
-        output Cam_Rst_n,      //cmos ¸´Î»ÐÅºÅ£¬µÍµçÆ½ÓÐÐ§
-        output Cam_Pwdn,        //µçÔ´ÐÝÃßÄ£Ê½Ñ¡Ôñ
+        output Cam_Rst_n,      //cmos ï¿½ï¿½Î»ï¿½ÅºÅ£ï¿½ï¿½Íµï¿½Æ½ï¿½ï¿½Ð§
+        output Cam_Pwdn,        //ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½Ä£Ê½Ñ¡ï¿½ï¿½
         output Frame_Clk,
         output Frame_FIFO_EN,
         output FIFO_RST,
@@ -140,7 +140,7 @@
     Data_to_DDR Data_to_DDR(
         .ARESETN(s00_axi_aresetn),
         .ACLK(s00_axi_aclk), 
-        .ENDIAN_MODE(ENDIAN_MODE),   //´óÐ¡¶ËÉèÖÃ
+        .ENDIAN_MODE(ENDIAN_MODE),   //ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         .M_AXI_AWID(M_AXI_AWID),
         .M_AXI_AWADDR(M_AXI_AWADDR),
         .M_AXI_AWLEN(M_AXI_AWLEN),   
@@ -195,22 +195,58 @@
         .WR_FIFO_DATA(WR_FIFO_DATA),
         .WR_DONE()
 );
+	// -----------------------------------------------------
+	// CDC control signal, REG0[0]
+	// -----------------------------------------------------
+	wire reg0_0_pclk;
+
+	xpm_cdc_sync_rst #(
+		.DEST_SYNC_FF(2),   // DECIMAL; range: 2-10
+		.INIT(0),           // DECIMAL; 0=initialize synchronization registers to 0, 1=initialize synchronization
+							// registers to 1
+		.INIT_SYNC_FF(0),   // DECIMAL; 0=disable simulation init values, 1=enable simulation init values
+		.SIM_ASSERT_CHK(0)  // DECIMAL; 0=disable simulation messages, 1=enable simulation messages
+	)
+	xpm_cdc_sync_rst_reg0_inst (
+		.dest_rst(reg0_0_pclk), // 1-bit output: src_rst synchronized to the destination clock domain. This output
+							// is registered.
+
+		.dest_clk(PCLK), // 1-bit input: Destination clock.
+		.src_rst(REG0[0])    // 1-bit input: Source reset signal.
+	);
+
+	wire axi_resetn_dvp_pclk;
+
+	xpm_cdc_sync_rst #(
+		.DEST_SYNC_FF(2),   // DECIMAL; range: 2-10
+		.INIT(0),           // DECIMAL; 0=initialize synchronization registers to 0, 1=initialize synchronization
+							// registers to 1
+		.INIT_SYNC_FF(0),   // DECIMAL; 0=disable simulation init values, 1=enable simulation init values
+		.SIM_ASSERT_CHK(0)  // DECIMAL; 0=disable simulation messages, 1=enable simulation messages
+	)
+	xpm_cdc_sync_rstn_ps_inst (
+		.dest_rst(axi_resetn_dvp_pclk), // 1-bit output: src_rst synchronized to the destination clock domain. This output
+							// is registered.
+
+		.dest_clk(PCLK), // 1-bit input: Destination clock.
+		.src_rst(s00_axi_aresetn)    // 1-bit input: Source reset signal.
+	);
 
     DVP_Capture DVP_Capture (
-        .Rst_n(s00_axi_aresetn),//¸´Î»
-        .PCLK(PCLK),            //ÏñËØÊ±ÖÓ
-        .Vsync(Vsync),           //³¡Í¬²½ÐÅºÅ
-        .Href(Href),            //ÐÐÍ¬²½ÐÅºÅ
-        .Data(Data),            //Êý¾Ý
-        .Send_En(REG0[0]),         //Êý¾Ý´«ÊäÊ¹ÄÜ
+        .Rst_n(axi_resetn_dvp_pclk),// this is async reset design, so no cdc is required, but the design is dangerous
+        .PCLK(PCLK),            //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+        .Vsync(Vsync),           //ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Åºï¿½
+        .Href(Href),            //ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Åºï¿½
+        .Data(Data),            //ï¿½ï¿½ï¿½ï¿½
+        .Send_En(reg0_0_pclk),         // active high
         
-        .DataPixel(DataPixel),  //ÏñËØÊý¾Ý
+        .DataPixel(DataPixel),  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         
-        .Cam_Rst_n(Cam_Rst_n),  //cmos ¸´Î»ÐÅºÅ£¬µÍµçÆ½ÓÐÐ§
-        .Cam_Pwdn(Cam_Pwdn),    //µçÔ´ÐÝÃßÄ£Ê½Ñ¡Ôñ
+        .Cam_Rst_n(Cam_Rst_n),  // not used
+        .Cam_Pwdn(Cam_Pwdn),    // not used
     
-        .Frame_Clk(Frame_Clk),  //Ê±ÖÓÐÅºÅ
-        .Frame_FIFO_EN(Frame_FIFO_EN)//FIFOÊ¹ÄÜÐÅºÅ
+        .Frame_Clk(Frame_Clk),  //Ê±ï¿½ï¿½ï¿½Åºï¿½
+        .Frame_FIFO_EN(Frame_FIFO_EN)//FIFOÊ¹ï¿½ï¿½ï¿½Åºï¿½
     );
     
     
