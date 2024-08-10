@@ -74,13 +74,15 @@ module DVP_Capture2DDR_v1_0 #
     output Frame_Clk,
     output Frame_FIFO_EN,
     output FIFO_RST,
+
+    input wire  i_clk_axi,
+    input wire  i_rstn_axi,
+
     // User ports ends
     // Do not modify the ports beyond this line
 
 
     // Ports of Axi Slave Bus Interface S00_AXI
-    input wire  s00_axi_aclk,
-    input wire  s00_axi_aresetn,
     input wire [C_S00_AXI_ADDR_WIDTH-1 : 0] s00_axi_awaddr,
     input wire [2 : 0] s00_axi_awprot,
     input wire  s00_axi_awvalid,
@@ -114,8 +116,8 @@ module DVP_Capture2DDR_v1_0 #
       .C_S_AXI_ADDR_WIDTH(C_S00_AXI_ADDR_WIDTH)
     )
     DVP_Capture2DDR_v1_0_S00_AXI_inst (
-      .S_AXI_ACLK(s00_axi_aclk),
-      .S_AXI_ARESETN(s00_axi_aresetn),
+      .S_AXI_ACLK(i_clk_axi),
+      .S_AXI_ARESETN(i_rstn_axi),
       .S_AXI_AWADDR(s00_axi_awaddr),
       .S_AXI_AWPROT(s00_axi_awprot),
       .S_AXI_AWVALID(s00_axi_awvalid),
@@ -174,7 +176,7 @@ module DVP_Capture2DDR_v1_0 #
       // is registered.
 
       .dest_clk(PCLK), // 1-bit input: Destination clock.
-      .src_rst(s00_axi_aresetn)    // 1-bit input: Source reset signal.
+      .src_rst(i_rstn_axi)    // 1-bit input: Source reset signal.
     );
 
   DVP_Capture
@@ -205,8 +207,8 @@ module DVP_Capture2DDR_v1_0 #
 
   Data_to_DDR
     Data_to_DDR_inst(
-      .ARESETN(s00_axi_aresetn),
-      .ACLK(s00_axi_aclk),
+      .ARESETN(i_rstn_axi),
+      .ACLK(i_clk_axi),
       .ENDIAN_MODE(ENDIAN_MODE),
       .M_AXI_AWID(M_AXI_AWID),
       .M_AXI_AWADDR(M_AXI_AWADDR),
