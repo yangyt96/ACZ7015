@@ -24,7 +24,6 @@ proc cr_bd_system { parentCell } {
             xilinx.com:ip:smartconnect:1.0\
             xilinx.com:ip:axi_vdma:6.3\
             xilinx.com:ip:clk_wiz:6.0\
-            xilinx.com:ip:fifo_generator:13.2\
             xilinx.com:ip:processing_system7:5.5\
             www.xilinx.com:user:rgb2lcd:1.0\
             xilinx.com:user:rgb565to888:1.0\
@@ -144,11 +143,6 @@ connect_bd_intf_net -intf_net v_tc_0_vtiming_out [get_bd_intf_pins v_axi4s_vid_o
 ##################################################################
 # Create port connections
 ##################################################################
-connect_bd_net -net DVP_Capture2DDR_0_DataPixel [get_bd_pins DVP_Capture2DDR_0/DataPixel] [get_bd_pins fifo_generator_0/din]
-connect_bd_net -net DVP_Capture2DDR_0_FIFO_RST [get_bd_pins DVP_Capture2DDR_0/FIFO_RST] [get_bd_pins fifo_generator_0/rst]
-connect_bd_net -net DVP_Capture2DDR_0_Frame_Clk [get_bd_pins DVP_Capture2DDR_0/Frame_Clk] [get_bd_pins fifo_generator_0/wr_clk]
-connect_bd_net -net DVP_Capture2DDR_0_Frame_FIFO_EN [get_bd_pins DVP_Capture2DDR_0/Frame_FIFO_EN] [get_bd_pins fifo_generator_0/wr_en]
-connect_bd_net -net DVP_Capture2DDR_0_WR_FIFO_RE [get_bd_pins DVP_Capture2DDR_0/WR_FIFO_RE] [get_bd_pins fifo_generator_0/rd_en]
 connect_bd_net -net Data_0_1 [get_bd_ports CAM_Data] [get_bd_pins DVP_Capture2DDR_0/Data]
 connect_bd_net -net Href_0_1 [get_bd_ports CAM_Href] [get_bd_pins DVP_Capture2DDR_0/Href]
 connect_bd_net -net PCLK_0_1 [get_bd_ports CAM_PCLK] [get_bd_pins DVP_Capture2DDR_0/PCLK]
@@ -156,10 +150,7 @@ connect_bd_net -net Vsync_0_1 [get_bd_ports CAM_Vsync] [get_bd_pins DVP_Capture2
 connect_bd_net -net axi_dynclk_0_LOCKED_O [get_bd_pins axi_dynclk_0/LOCKED_O] [get_bd_pins clk_wiz_0/resetn] [get_bd_pins rgb2lcd_0/vid_rst]
 connect_bd_net -net axi_dynclk_0_PXL_CLK_O [get_bd_pins axi_dynclk_0/PXL_CLK_O] [get_bd_pins rgb2lcd_0/pixel_clk] [get_bd_pins v_axi4s_vid_out_0/vid_io_out_clk] [get_bd_pins v_tc_0/clk]
 connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_ports CAM_XCLK] [get_bd_pins clk_wiz_0/clk_out1]
-connect_bd_net -net fifo_generator_0_almost_empty [get_bd_pins DVP_Capture2DDR_0/WR_FIFO_AEMPTY] [get_bd_pins fifo_generator_0/almost_empty]
-connect_bd_net -net fifo_generator_0_dout [get_bd_pins DVP_Capture2DDR_0/WR_FIFO_DATA] [get_bd_pins fifo_generator_0/dout]
-connect_bd_net -net fifo_generator_0_empty [get_bd_pins DVP_Capture2DDR_0/WR_FIFO_EMPTY] [get_bd_pins fifo_generator_0/empty]
-connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins DVP_Capture2DDR_0/i_clk_axi] [get_bd_pins axi_dynclk_0/REF_CLK_I] [get_bd_pins axi_dynclk_0/s_axi_lite_aclk] [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins axi_mem_intercon/ACLK] [get_bd_pins axi_mem_intercon/M00_ACLK] [get_bd_pins axi_mem_intercon/S00_ACLK] [get_bd_pins axi_smc/aclk] [get_bd_pins axi_vdma_0/m_axi_mm2s_aclk] [get_bd_pins axi_vdma_0/m_axis_mm2s_aclk] [get_bd_pins axi_vdma_0/s_axi_lite_aclk] [get_bd_pins clk_wiz_0/clk_in1] [get_bd_pins fifo_generator_0/rd_clk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP1_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/M02_ACLK] [get_bd_pins ps7_0_axi_periph/M03_ACLK] [get_bd_pins ps7_0_axi_periph/M04_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rgb565to888_0/m_clk] [get_bd_pins rgb565to888_0/s_clk] [get_bd_pins rst_ps7_0_100M/slowest_sync_clk] [get_bd_pins v_axi4s_vid_out_0/aclk] [get_bd_pins v_tc_0/s_axi_aclk]
+connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins DVP_Capture2DDR_0/i_clk_axi] [get_bd_pins axi_dynclk_0/REF_CLK_I] [get_bd_pins axi_dynclk_0/s_axi_lite_aclk] [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins axi_mem_intercon/ACLK] [get_bd_pins axi_mem_intercon/M00_ACLK] [get_bd_pins axi_mem_intercon/S00_ACLK] [get_bd_pins axi_smc/aclk] [get_bd_pins axi_vdma_0/m_axi_mm2s_aclk] [get_bd_pins axi_vdma_0/m_axis_mm2s_aclk] [get_bd_pins axi_vdma_0/s_axi_lite_aclk] [get_bd_pins clk_wiz_0/clk_in1] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP1_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/M02_ACLK] [get_bd_pins ps7_0_axi_periph/M03_ACLK] [get_bd_pins ps7_0_axi_periph/M04_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rgb565to888_0/m_clk] [get_bd_pins rgb565to888_0/s_clk] [get_bd_pins rst_ps7_0_100M/slowest_sync_clk] [get_bd_pins v_axi4s_vid_out_0/aclk] [get_bd_pins v_tc_0/s_axi_aclk]
 connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins rst_ps7_0_100M/ext_reset_in]
 connect_bd_net -net rst_ps7_0_100M_peripheral_aresetn [get_bd_pins DVP_Capture2DDR_0/i_rstn_axi] [get_bd_pins axi_dynclk_0/s_axi_lite_aresetn] [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins axi_mem_intercon/ARESETN] [get_bd_pins axi_mem_intercon/M00_ARESETN] [get_bd_pins axi_mem_intercon/S00_ARESETN] [get_bd_pins axi_smc/aresetn] [get_bd_pins axi_vdma_0/axi_resetn] [get_bd_pins ps7_0_axi_periph/ARESETN] [get_bd_pins ps7_0_axi_periph/M00_ARESETN] [get_bd_pins ps7_0_axi_periph/M01_ARESETN] [get_bd_pins ps7_0_axi_periph/M02_ARESETN] [get_bd_pins ps7_0_axi_periph/M03_ARESETN] [get_bd_pins ps7_0_axi_periph/M04_ARESETN] [get_bd_pins ps7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_0_100M/peripheral_aresetn] [get_bd_pins v_tc_0/s_axi_aresetn]
 connect_bd_net -net v_axi4s_vid_out_0_vtg_ce [get_bd_pins v_axi4s_vid_out_0/vtg_ce] [get_bd_pins v_tc_0/clken]

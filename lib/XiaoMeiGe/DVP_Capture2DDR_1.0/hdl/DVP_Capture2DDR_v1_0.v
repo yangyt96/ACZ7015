@@ -5,7 +5,7 @@ module DVP_Capture2DDR_v1_0 #
     // Users to add parameters here
     parameter WR_ADDRESS = 32'h1800000,
     parameter WR_LENGTH = 768000,
-    parameter ENDIAN_MODE = 1,
+    parameter ENDIAN_MODE = 0,
 
     // Do not modify the parameters beyond this line
     // Parameters of Axi Slave Bus Interface S00_AXI
@@ -58,23 +58,13 @@ module DVP_Capture2DDR_v1_0 #
     input        M_AXI_RVALID,
     output       M_AXI_RREADY,
 
-    output       WR_FIFO_RE,
-    input        WR_FIFO_EMPTY,
-    input        WR_FIFO_AEMPTY,
-    input [63:0] WR_FIFO_DATA,
-
     input PCLK,            //����ʱ��
     input Vsync,           //��ͬ���ź�
     input Href,            //��ͬ���ź�
     input [7:0]Data,       //����
 
-    output [7:0]DataPixel,
     output Cam_Rst_n,      //cmos ��λ�źţ��͵�ƽ��Ч
     output Cam_Pwdn,        //��Դ����ģʽѡ��
-    output Frame_Clk,
-    output Frame_FIFO_EN,
-    output FIFO_RST,
-
     input wire  i_clk_axi,
     input wire  i_rstn_axi,
 
@@ -141,7 +131,7 @@ module DVP_Capture2DDR_v1_0 #
     );
 
   // -----------------------------------------------------
-  // CDC control signal, REG0[0]
+  // CDC control signal
   // -----------------------------------------------------
   wire reg0_0_pclk;
 
@@ -179,6 +169,14 @@ module DVP_Capture2DDR_v1_0 #
       .src_rst(i_rstn_axi)    // 1-bit input: Source reset signal.
     );
 
+
+  // -----------------------------------------------------
+  // IO input to DVP Capture
+  // -----------------------------------------------------
+  wire Frame_Clk;
+  wire Frame_FIFO_EN;
+  wire [7:0]DataPixel;
+
   DVP_Capture
     DVP_Capture_inst
     (
@@ -199,16 +197,76 @@ module DVP_Capture2DDR_v1_0 #
     );
 
   // ---------------------------------------------------------------
+  // DVP to FIFO
+  // ---------------------------------------------------------------
+
+  wire        WR_FIFO_RE;
+  wire        WR_FIFO_EMPTY;
+  wire        WR_FIFO_AEMPTY;
+  wire [63:0] WR_FIFO_DATA;
+
+  wire FIFO_RST;
+  assign FIFO_RST = ~reg0_0_pclk; //! Reset the FIFO when DVP is not enabled
+
+  xpm_fifo_async
+    #(
+      .CDC_SYNC_STAGES(2),
+      .DOUT_RESET_VALUE("0"),
+      .ECC_MODE("no_ecc"),
+      .FIFO_MEMORY_TYPE("auto"),
+      .FIFO_READ_LATENCY(0),
+      .FIFO_WRITE_DEPTH(4096),
+      .FULL_RESET_VALUE(1),
+      .PROG_EMPTY_THRESH(4),
+      .PROG_FULL_THRESH(4095),
+      .RD_DATA_COUNT_WIDTH(9),
+      .READ_DATA_WIDTH(64),
+      .READ_MODE("fwft"),
+      .RELATED_CLOCKS(0),
+      .USE_ADV_FEATURES("0c00"),
+      .WAKEUP_TIME(0),
+      .WRITE_DATA_WIDTH(8),
+      .WR_DATA_COUNT_WIDTH(12)
+    )
+    xpm_fifo_async_inst (
+
+      //---------------------------------------------
+      //SYSTEM
+
+      .rst(FIFO_RST),
+      .wr_clk(Frame_Clk),
+      .rd_clk(rd_clk),
+      .sleep(0),
+
+      // -------------------------------------------
+      // FIFO_WRITE
+
+      .full(),
+      .din(DataPixel),
+      .wr_en(Frame_FIFO_EN),
+
+      // -------------------------------------------
+      // FIFO_READ
+
+      .almost_empty(WR_FIFO_AEMPTY),
+      .empty(WR_FIFO_EMPTY),
+      .dout(WR_FIFO_DATA),
+      .rd_en(WR_FIFO_RE)
+
+    );
+
+  // ---------------------------------------------------------------
   // FIFO to AXI Full
   // ---------------------------------------------------------------
 
   wire WR_READY;
-  assign FIFO_RST = ~REG0[0];
 
   Data_to_DDR
     Data_to_DDR_inst(
+
       .ARESETN(i_rstn_axi),
       .ACLK(i_clk_axi),
+
       .ENDIAN_MODE(ENDIAN_MODE),
       .M_AXI_AWID(M_AXI_AWID),
       .M_AXI_AWADDR(M_AXI_AWADDR),
