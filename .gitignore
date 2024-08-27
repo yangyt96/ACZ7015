@@ -1,0 +1,13 @@
+project*
+workspace
+
+
+*vunit_out
+
+.vscode
+
+*.bkp
+
+test_src
+
+arithmetic

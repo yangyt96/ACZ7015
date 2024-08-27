@@ -1,0 +1,10 @@
+
+
+OPTION psf_version = 2.1;
+
+BEGIN DRIVER DVP_Capture2DDR
+	OPTION supported_peripherals = (DVP_Capture2DDR);
+	OPTION copyfiles = all;
+	OPTION VERSION = 1.0;
+	OPTION NAME = DVP_Capture2DDR;
+END DRIVER
