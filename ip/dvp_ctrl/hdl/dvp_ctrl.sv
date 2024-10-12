@@ -215,7 +215,7 @@ module dvp_ctrl #
       .o_fifo_wr_cnt(fifo_wr_cnt),
       .o_fifo_rd_stat(fifo_rd_stat),
       .o_fifo_rd_cnt(fifo_rd_cnt),
-      .i_axis_clk(i_axis_clk),
+      .i_axis_clk(i_axi_clk),
       .i_axis_endian(axis_endian),
       .m_axis_tvalid(m_axis_tvalid),
       .m_axis_tready(m_axis_tready),
