@@ -6,8 +6,9 @@ ROOT = Path(__file__).parents[0]
 
 
 vu = VUnit.from_argv(compile_builtins=False)
-
+vu.add_vhdl_builtins()
 vu.add_verilog_builtins()
+vu.add_verification_components()
 
 vu.add_external_library("xpm", "C:/intelFPGA/20.1/xil-2018.3/xpm")
 
@@ -25,13 +26,12 @@ liv_dvp_to_axis.add_source_files([
 
 liv_dvp_to_axis.set_sim_option(
     "modelsim.vsim_flags", 
-    ["dvp_to_axis.glbl "]
+    [liv_dvp_to_axis.name+".glbl "]
 )
 
 liv_dvp_to_axis.set_sim_option(
     name="modelsim.init_file.gui",
     value=str(ROOT/"tb/dvp_to_axis_tb.do"),
-    allow_empty=True
 )
 
 
@@ -45,14 +45,17 @@ lib_dvp_ctrl.add_source_files([
     ROOT/"hdl/dvp_to_axis.sv",
     ROOT/"hdl/dvp_axi_lite.sv",
     ROOT/"hdl/dvp_ctrl.sv",
-    ROOT/"tb/dvp_ctrl_tb.sv",
+    ROOT/"tb/dvp_ctrl_tb.vhd",
 ])
-
 
 lib_dvp_ctrl.set_sim_option(
     "modelsim.vsim_flags", 
-    ["dvp_ctrl.glbl "],
-    allow_empty=True
+    [lib_dvp_ctrl.name+".glbl "],
+)
+
+lib_dvp_ctrl.set_sim_option(
+    name="modelsim.init_file.gui",
+    value=str(ROOT/"tb/dvp_ctrl_tb.do"),
 )
 
 
