@@ -209,7 +209,7 @@ module dvp_ctrl #
       .i_dvp_href(i_dvp_href),
       .i_dvp_data(i_dvp_data),
       .i_dvp_ena(dvp_ena_cdc),
-      .i_dvp_rst(dvp_rst),
+      .i_dvp_rst(dvp_rst | ~dvp_ena_cdc),
       .i_dvp_drop_vsync(dvp_drop_vsync_cdc),
       .o_fifo_wr_stat(fifo_wr_stat),
       .o_fifo_wr_cnt(fifo_wr_cnt),
