@@ -94,7 +94,7 @@ module dvp_ctrl #
       .src_in({i_axi_rst, dvp_ena})
     );
 
-    //! This is a const val
+  //! This is a const val
   xpm_cdc_array_single #
     (
       .DEST_SYNC_FF(2),   // DECIMAL; range: 2-10
@@ -151,6 +151,9 @@ module dvp_ctrl #
   // AXI Lite
   // ----------------------------------------
 
+  logic dvp_pwdn;
+  logic dvp_resetb;
+
   dvp_axi_lite #
     (
       .C_S_AXI_DATA_WIDTH(P_AXIL_DATA_WIDTH),
@@ -160,8 +163,8 @@ module dvp_ctrl #
     (
       .o_axis_endian(axis_endian),
 
-      .o_dvp_pwdn(o_dvp_pwdn),
-      .o_dvp_resetb(o_dvp_resetb),
+      .o_dvp_pwdn(dvp_pwdn),
+      .o_dvp_resetb(dvp_resetb),
       .o_dvp_ena(dvp_ena),
       .o_dvp_drop_vsync(dvp_drop_vsync),
 
@@ -220,6 +223,26 @@ module dvp_ctrl #
       .m_axis_tvalid(m_axis_tvalid),
       .m_axis_tready(m_axis_tready),
       .m_axis_tdata(m_axis_tdata)
+    );
+
+
+  // ----------------------------------------
+  // XVCLK to DVP control signal
+  // ----------------------------------------
+  xpm_cdc_array_single #
+    (
+      .DEST_SYNC_FF(2),   // DECIMAL; range: 2-10
+      .INIT_SYNC_FF(0),   // DECIMAL; 0=disable simulation init values, 1=enable simulation init values
+      .SIM_ASSERT_CHK(0), // DECIMAL; 0=disable simulation messages, 1=enable simulation messages
+      .SRC_INPUT_REG(1),  // DECIMAL; 0=do not register input, 1=register input
+      .WIDTH(2) // DECIMAL; range: 1-1024
+    )
+    cdc_dvp_hw_ctrl
+    (
+      .dest_out({o_dvp_pwdn, o_dvp_resetb}),
+      .dest_clk(i_dvp_xvclk),
+      .src_clk(i_axi_clk),
+      .src_in({dvp_pwdn, dvp_resetb})
     );
 
 

@@ -1,11 +1,66 @@
+/*
+ * dvp_ctrl.h
+ *
+ *  Created on: Oct 11, 2024
+ *      Author: yang
+ */
 
+#ifndef DVP_CTRL_H
+#define DVP_CTRL_H
 
+/****************** Include Files ********************/
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-#define DVPCTRL_CTRL 0x0
-#define DVPCTRL_FIFO_STAT 0x4
-#define DVPCTRL_FIFO_WR_CNT 0x8
-#define DVPCTRL_FIFO_WR_CNT 0xc
+#define DVPCTRL_CTRL_OFFSET 0x0
+#define DVPCTRL_FIFO_STAT_OFFSET 0x4
+#define DVPCTRL_FIFO_WR_CNT_OFFSET 0x8
+#define DVPCTRL_FIFO_RD_CNT_OFFSET 0xc
+
+
+/**************************** Type Definitions *****************************/
+
+/**
+ *
+ * Write a value to a DVPCTRL register. A 32 bit write is performed.
+ * If the component is implemented in a smaller width, only the least
+ * significant data is written.
+ *
+ * @param   BaseAddress is the base address of the DVPCTRLdevice.
+ * @param   RegOffset is the register offset from the base to write to.
+ * @param   Data is the data written to the register.
+ *
+ * @return  None.
+ *
+ * @note
+ * C-style signature:
+ * 	void DvpCtrl_mWriteReg(uint32_t BaseAddress, unsigned RegOffset, uint32_t Data)
+ *
+ */
+#define DvpCtrl_mWriteReg(BaseAddress, RegOffset, Data) \
+  	Xil_Out32((BaseAddress) + (RegOffset), (uint32_t)(Data))
+
+/**
+ *
+ * Read a value from a DVPCTRL register. A 32 bit read is performed.
+ * If the component is implemented in a smaller width, only the least
+ * significant data is read from the register. The most significant data
+ * will be read as 0.
+ *
+ * @param   BaseAddress is the base address of the DVPCTRL device.
+ * @param   RegOffset is the register offset from the base to write to.
+ *
+ * @return  Data is the data from the register.
+ *
+ * @note
+ * C-style signature:
+ * 	uint32_t DvpCtrl_mReadReg(uint32_t BaseAddress, unsigned RegOffset)
+ *
+ */
+#define DvpCtrl_mReadReg(BaseAddress, RegOffset) \
+    Xil_In32((BaseAddress) + (RegOffset))
+
 
 typedef struct __attribute__((__packed__))
 {
@@ -27,28 +82,43 @@ typedef struct __attribute__((__packed__))
     uint8_t pad1;
 } DvpCtrl_Stat;
 
-
 typedef struct
 {
-    uint16_t DeviceId;
-    uintptr_t BaseAddress;
-} DvpCtrl_Config;
-
-typedef struct
-{
-    DvpCtrl_Config Config;
-    DvpCtrl_Ctrl ctrl;
-    DvpCtrl_Stat stat;
-    uint32_t fifo_wr_cnt;
-    uint32_t fifo_rd_cnt;
+    uintptr_t base_addr;
 } DvpCtrl;
 
-DvpCtrl_Config *DvpCtrl_LookupConfig(uint16_t DeviceId);
-int32_t DvpCtrl_CfgInitialize(DvpCtrl *InstancePtr, DvpCtrl_Config *CfgPtr, uintptr_t EffectiveAddr);
-int32_t DvpCtrl_HwReset(DvpCtrl *InstancePtr);
-int32_t DvpCtrl_Enable(DvpCtrl *InstancePtr);
-int32_t DvpCtrl_SetEndian(DvpCtrl *InstancePtr);
-int32_t DvpCtrl_SetDropVsync(DvpCtrl *InstancePtr, uint8_t Count);
-int32_t DvpCtrl_GetFifoStat(DvpCtrl *InstancePtr);
-int32_t DvpCtrl_GetFifoWrCnt(DvpCtrl *InstancePtr);
-int32_t DvpCtrl_GetFifoRdCnt(DvpCtrl *InstancePtr);
+
+/************************** Function Prototypes ****************************/
+/**
+ *
+ * Run a self-test on the driver/device. Note this may be a destructive test if
+ * resets of the device are performed.
+ *
+ * If the hardware system is not built correctly, this function may never
+ * return to the caller.
+ *
+ * @param   baseaddr_p is the base address of the DVPCTRL instance to be worked on.
+ *
+ * @return
+ *
+ *    - XST_SUCCESS   if all self-test code passed
+ *    - XST_FAILURE   if any self-test code failed
+ *
+ * @note    Caching must be turned off for this function to work.
+ * @note    Self test may fail if data memory and device are not on the same bus.
+ *
+ */
+int32_t DvpCtrl_Reg_SelfTest(void * baseaddr_p);
+
+int32_t DvpCtrl_Initialize(DvpCtrl *inst, uintptr_t base_addr);
+int32_t DvpCtrl_Reset_Hardware(DvpCtrl *inst);
+int32_t DvpCtrl_Set_Endian(DvpCtrl *inst, bool param);
+int32_t DvpCtrl_Set_Enable(DvpCtrl *inst);
+int32_t DvpCtrl_Set_Disable(DvpCtrl *inst);
+int32_t DvpCtrl_Set_Drop_Vsync(DvpCtrl *inst, uint8_t cnt);
+
+DvpCtrl_Stat DvpCtrl_Get_Fifo_Status(DvpCtrl *inst);
+int32_t DvpCtrl_Get_Fifo_Wr_Count(DvpCtrl *inst);
+int32_t DvpCtrl_Get_Fifo_Rd_Count(DvpCtrl *inst);
+
+#endif /* DVP_CTRL_H */
