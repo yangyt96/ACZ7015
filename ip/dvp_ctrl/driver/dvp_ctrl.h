@@ -89,6 +89,18 @@ typedef struct
 
 
 /************************** Function Prototypes ****************************/
+
+int32_t DvpCtrl_Initialize(DvpCtrl *inst, uintptr_t base_addr);
+int32_t DvpCtrl_Reset_Hardware(DvpCtrl *inst);
+int32_t DvpCtrl_Set_Endian(DvpCtrl *inst, bool param);
+int32_t DvpCtrl_Set_Enable(DvpCtrl *inst);
+int32_t DvpCtrl_Set_Disable(DvpCtrl *inst);
+int32_t DvpCtrl_Set_Drop_Vsync(DvpCtrl *inst, uint8_t cnt);
+
+DvpCtrl_Stat DvpCtrl_Get_Fifo_Status(DvpCtrl *inst);
+int32_t DvpCtrl_Get_Fifo_Wr_Count(DvpCtrl *inst);
+int32_t DvpCtrl_Get_Fifo_Rd_Count(DvpCtrl *inst);
+
 /**
  *
  * Run a self-test on the driver/device. Note this may be a destructive test if
@@ -110,15 +122,5 @@ typedef struct
  */
 int32_t DvpCtrl_Reg_SelfTest(void * baseaddr_p);
 
-int32_t DvpCtrl_Initialize(DvpCtrl *inst, uintptr_t base_addr);
-int32_t DvpCtrl_Reset_Hardware(DvpCtrl *inst);
-int32_t DvpCtrl_Set_Endian(DvpCtrl *inst, bool param);
-int32_t DvpCtrl_Set_Enable(DvpCtrl *inst);
-int32_t DvpCtrl_Set_Disable(DvpCtrl *inst);
-int32_t DvpCtrl_Set_Drop_Vsync(DvpCtrl *inst, uint8_t cnt);
-
-DvpCtrl_Stat DvpCtrl_Get_Fifo_Status(DvpCtrl *inst);
-int32_t DvpCtrl_Get_Fifo_Wr_Count(DvpCtrl *inst);
-int32_t DvpCtrl_Get_Fifo_Rd_Count(DvpCtrl *inst);
 
 #endif /* DVP_CTRL_H */
