@@ -229,9 +229,9 @@ module dvp_axi_lite #
     if ( S_AXI_ARESETN == 1'b0 )
     begin
       slv_reg0 <= 0;
-      // slv_reg1 <= 0;
-      // slv_reg2 <= 0;
-      // slv_reg3 <= 0;
+      slv_reg1 <= 0;
+      slv_reg2 <= 0;
+      slv_reg3 <= 0;
 
     end
     else
@@ -280,6 +280,14 @@ module dvp_axi_lite #
           end
         endcase
       end
+
+      slv_reg1[7:0] <= i_fifo_wr_stat;
+      slv_reg1[15:8] <= 0;
+      slv_reg1[23:16] <= i_fifo_rd_stat;
+      slv_reg1[31:24] <= 0;
+      slv_reg2[15:0] <= i_fifo_wr_cnt;
+      slv_reg3[15:0] <= i_fifo_rd_cnt;
+
     end
   end
 
@@ -419,18 +427,10 @@ module dvp_axi_lite #
 
   // Add user logic here
   assign o_axis_endian    = slv_reg0[0];
-
   assign o_dvp_pwdn       = slv_reg0[8];
   assign o_dvp_resetb     = slv_reg0[9];
   assign o_dvp_ena        = slv_reg0[16];
   assign o_dvp_drop_vsync = slv_reg0[31:24];
-
-  assign slv_reg1[7:0] = i_fifo_wr_stat;
-  assign slv_reg1[15:8] = 0;
-  assign slv_reg1[23:16] = i_fifo_rd_stat;
-  assign slv_reg1[31:24] = 0;
-  assign slv_reg2[15:0] = i_fifo_wr_cnt;
-  assign slv_reg3[15:0] = i_fifo_rd_cnt;
 
   // User logic ends
 

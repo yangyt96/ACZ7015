@@ -44,14 +44,14 @@
    wire  s_axil_rvalid;
    reg  s_axil_rready;
 
-   ov5640_ctrl #
+   dvp_ctrl #
      (
        .P_DVP_DATA_WIDTH(P_DVP_DATA_WIDTH),
        .P_AXIS_DATA_WIDTH(P_AXIS_DATA_WIDTH),
        .P_AXIL_DATA_WIDTH(P_AXIL_DATA_WIDTH),
        .P_AXIL_ADDR_WIDTH(P_AXIL_ADDR_WIDTH)
      )
-     ov5640_ctrl_inst
+     dvp_ctrl_inst
      (
        .i_dvp_pclk(i_dvp_pclk),
        .i_dvp_vsync(i_dvp_vsync),
