@@ -56,45 +56,47 @@ module dvp_ctrl_wrapper #
     //! @end
   );
 
-  dvp_ctrl # (
-             .P_DVP_DATA_WIDTH(P_DVP_DATA_WIDTH),
-             .P_AXIS_DATA_WIDTH(P_AXIS_DATA_WIDTH),
-             .P_AXIL_DATA_WIDTH(P_AXIL_DATA_WIDTH),
-             .P_AXIL_ADDR_WIDTH(P_AXIL_ADDR_WIDTH)
-           )
-           dvp_ctrl_inst (
-             .i_dvp_pclk(i_dvp_pclk),
-             .i_dvp_vsync(i_dvp_vsync),
-             .i_dvp_href(i_dvp_href),
-             .i_dvp_data(i_dvp_data),
-             .o_dvp_resetb(o_dvp_resetb),
-             .o_dvp_pwdn(o_dvp_pwdn),
-             .o_dvp_xvclk(o_dvp_xvclk),
-             .i_dvp_xvclk(i_dvp_xvclk),
-             .i_axi_clk(i_axi_clk),
-             .i_axi_rst(~i_axi_rstn),
-             .m_axis_tvalid(m_axis_tvalid),
-             .m_axis_tready(m_axis_tready),
-             .m_axis_tdata(m_axis_tdata),
-             .s_axil_awaddr(s_axil_awaddr),
-             .s_axil_awprot(s_axil_awprot),
-             .s_axil_awvalid(s_axil_awvalid),
-             .s_axil_awready(s_axil_awready),
-             .s_axil_wdata(s_axil_wdata),
-             .s_axil_wstrb(s_axil_wstrb),
-             .s_axil_wvalid(s_axil_wvalid),
-             .s_axil_wready(s_axil_wready),
-             .s_axil_bresp(s_axil_bresp),
-             .s_axil_bvalid(s_axil_bvalid),
-             .s_axil_bready(s_axil_bready),
-             .s_axil_araddr(s_axil_araddr),
-             .s_axil_arprot(s_axil_arprot),
-             .s_axil_arvalid(s_axil_arvalid),
-             .s_axil_arready(s_axil_arready),
-             .s_axil_rdata(s_axil_rdata),
-             .s_axil_rresp(s_axil_rresp),
-             .s_axil_rvalid(s_axil_rvalid),
-             .s_axil_rready(s_axil_rready)
-           );
+  dvp_ctrl #
+    (
+      .P_DVP_DATA_WIDTH(P_DVP_DATA_WIDTH),
+      .P_AXIS_DATA_WIDTH(P_AXIS_DATA_WIDTH),
+      .P_AXIL_DATA_WIDTH(P_AXIL_DATA_WIDTH),
+      .P_AXIL_ADDR_WIDTH(P_AXIL_ADDR_WIDTH)
+    )
+    dvp_ctrl_inst
+    (
+      .i_dvp_pclk(i_dvp_pclk),
+      .i_dvp_vsync(i_dvp_vsync),
+      .i_dvp_href(i_dvp_href),
+      .i_dvp_data(i_dvp_data),
+      .o_dvp_resetb(o_dvp_resetb),
+      .o_dvp_pwdn(o_dvp_pwdn),
+      .o_dvp_xvclk(o_dvp_xvclk),
+      .i_dvp_xvclk(i_dvp_xvclk),
+      .i_axi_clk(i_axi_clk),
+      .i_axi_rst(~i_axi_rstn),
+      .m_axis_tvalid(m_axis_tvalid),
+      .m_axis_tready(m_axis_tready),
+      .m_axis_tdata(m_axis_tdata),
+      .s_axil_awaddr(s_axil_awaddr),
+      .s_axil_awprot(s_axil_awprot),
+      .s_axil_awvalid(s_axil_awvalid),
+      .s_axil_awready(s_axil_awready),
+      .s_axil_wdata(s_axil_wdata),
+      .s_axil_wstrb(s_axil_wstrb),
+      .s_axil_wvalid(s_axil_wvalid),
+      .s_axil_wready(s_axil_wready),
+      .s_axil_bresp(s_axil_bresp),
+      .s_axil_bvalid(s_axil_bvalid),
+      .s_axil_bready(s_axil_bready),
+      .s_axil_araddr(s_axil_araddr),
+      .s_axil_arprot(s_axil_arprot),
+      .s_axil_arvalid(s_axil_arvalid),
+      .s_axil_arready(s_axil_arready),
+      .s_axil_rdata(s_axil_rdata),
+      .s_axil_rresp(s_axil_rresp),
+      .s_axil_rvalid(s_axil_rvalid),
+      .s_axil_rready(s_axil_rready)
+    );
 
 endmodule
