@@ -12,12 +12,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "xil_io.h"
 
 #define DVPCTRL_CTRL_OFFSET 0x0
 #define DVPCTRL_FIFO_STAT_OFFSET 0x4
 #define DVPCTRL_FIFO_WR_CNT_OFFSET 0x8
 #define DVPCTRL_FIFO_RD_CNT_OFFSET 0xc
-
 
 /**************************** Type Definitions *****************************/
 
@@ -39,7 +39,7 @@
  *
  */
 #define DvpCtrl_mWriteReg(BaseAddress, RegOffset, Data) \
-  	Xil_Out32((BaseAddress) + (RegOffset), (uint32_t)(Data))
+    Xil_Out32((BaseAddress) + (RegOffset), (uint32_t)(Data))
 
 /**
  *
@@ -60,7 +60,6 @@
  */
 #define DvpCtrl_mReadReg(BaseAddress, RegOffset) \
     Xil_In32((BaseAddress) + (RegOffset))
-
 
 typedef struct __attribute__((__packed__))
 {
@@ -87,19 +86,21 @@ typedef struct
     uintptr_t base_addr;
 } DvpCtrl;
 
-
 /************************** Function Prototypes ****************************/
 
 int32_t DvpCtrl_Initialize(DvpCtrl *inst, uintptr_t base_addr);
 int32_t DvpCtrl_Reset_Hardware(DvpCtrl *inst);
+
+DvpCtrl_Ctrl DvpCtrl_Get_Control(DvpCtrl *inst);
+DvpCtrl_Stat DvpCtrl_Get_Fifo_Status(DvpCtrl *inst);
+int32_t DvpCtrl_Get_Fifo_Wr_Count(DvpCtrl *inst);
+int32_t DvpCtrl_Get_Fifo_Rd_Count(DvpCtrl *inst);
+int32_t DvpCtrl_Set_Control(DvpCtrl *inst, DvpCtrl_Ctrl ctrl);
+
 int32_t DvpCtrl_Set_Endian(DvpCtrl *inst, bool param);
 int32_t DvpCtrl_Set_Enable(DvpCtrl *inst);
 int32_t DvpCtrl_Set_Disable(DvpCtrl *inst);
 int32_t DvpCtrl_Set_Drop_Vsync(DvpCtrl *inst, uint8_t cnt);
-
-DvpCtrl_Stat DvpCtrl_Get_Fifo_Status(DvpCtrl *inst);
-int32_t DvpCtrl_Get_Fifo_Wr_Count(DvpCtrl *inst);
-int32_t DvpCtrl_Get_Fifo_Rd_Count(DvpCtrl *inst);
 
 /**
  *
@@ -120,7 +121,6 @@ int32_t DvpCtrl_Get_Fifo_Rd_Count(DvpCtrl *inst);
  * @note    Self test may fail if data memory and device are not on the same bus.
  *
  */
-int32_t DvpCtrl_Reg_SelfTest(void * baseaddr_p);
-
+int32_t DvpCtrl_Reg_SelfTest(void *baseaddr_p);
 
 #endif /* DVP_CTRL_H */
