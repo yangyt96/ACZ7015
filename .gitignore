@@ -1,13 +1,9 @@
-project*
+# Folder
 workspace
-
-
 *vunit_out
-
 .vscode
 
+# File Type
 *.bkp
+*.pdf
 
-test_src
-
-arithmetic

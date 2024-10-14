@@ -82,3 +82,4 @@ set_property PACKAGE_PIN D2 [get_ports CAM_Vsync]
 #set_property PACKAGE_PIN R4 [get_ports pl_rst]
 
 
+
