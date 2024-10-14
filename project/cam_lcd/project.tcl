@@ -1,13 +1,11 @@
-set project_name "cam_lcd"
-set project_dir "C:/project/ACZ7015/workspace/$project_name"
-
-
-create_project $project_name $project_dir -part xc7z015clg485-2
-
-
-
-
 set cur_dir [file dirname [info script]]
+puts $cur_dir
+
+
+set project_name "cam_lcd"
+set project_dir "$cur_dir/../../workspace/$project_name"
+puts $project_dir
+create_project $project_name $project_dir -part xc7z015clg485-2
 
 
 set lib_file "$cur_dir/../../lib/source_lib.tcl"
